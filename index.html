@@ -13,8 +13,19 @@
   <div class="container nav">
     <div class="logo">
       <img src="assets/Ropesric_logo.svg" alt="Ropesric logo" class="brand-logo"/>
+      <!-- inside header .nav, near your badge/navlinks -->
+    <button id="menuToggle"
+    class="hamburger"
+    aria-label="Open menu"
+    aria-controls="mobileMenu"
+    aria-expanded="false">
+    <!-- simple icon -->
+    <span aria-hidden="true">☰</span>
+</button>
     </div>
     <span class="badge">✨ Craftful: AI-assisted design</span>
+    
+
     <nav class="navlinks">
       <a href="#about">About</a>
       <a href="#services">Services</a>
@@ -22,9 +33,21 @@
       <a href="#clientcounts">Client Counts</a>
       <a href="#game">Game</a>
       <a href="#contact">Contact</a>
-    </nav>
+    </nav>    
   </div>
+    <!-- Mobile slide-down menu (below the sticky header) -->
+  <nav id="mobileMenu" class="mobile-menu" hidden>
+    <div class="underline" style="width: inherit;"></div>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#process">Process</a>
+    <a href="#numbers">Numbers</a>
+    <a href="#game">Game</a>
+    <a href="#contact">Contact</a>
+  </nav>
 </header>
+
+
 
 <section class="hero" id="about">
   <div class="container hero-inner">
@@ -154,21 +177,52 @@
 </section>
 
 <section id="game" class="pad">
-  <div class="container">
-    <h2 class="section-title">Mini-game: Help the robot catch ideas</h2>
-    <div class="underline"></div>
-    <p class="section-sub">Use ◀︎ ▶︎ or A/D to move. Start, pause (Space), resume, stop, or restart.</p>
+  
 
+  <div class="container">
+    <!-- Mobile-only fallback (hidden on desktop) -->
+    <div class="card game-mobile-note" aria-hidden="true">
+      <h3 style="margin-top:0">Mini-game available on larger screens</h3>
+      <p style="color:var(--muted);margin:.4rem 0 0">
+        For the best experience, play our canvas game on a tablet or desktop.
+        Meanwhile, explore our services and process — we’d love to build with you. 🚀
+      </p>
+    </div>
+    <div class="game-heading">
+      <h2 class="section-title">Mini-game: Help the robot catch ideas</h2>
+      <div class="underline"></div>
+      <p class="section-sub">Use ◀︎ ▶︎ or A/D to move. Start, pause (Space), resume, stop, or restart.</p>
+    </div>
     <div class="canvas-wrap">
       <!-- left controls -->
       <div class="overlay-left">
         <div class="glass controls" role="toolbar" aria-label="Game controls">
-          <button id="start"   class="ctrl" title="Start">▶</button>
-          <button id="pause"   class="ctrl" title="Pause">⏸</button>
-          <button id="resume"  class="ctrl" title="Resume">▶</button>
-          <button id="stop"    class="ctrl" title="Stop">■</button>
-          <button id="restart" class="ctrl" title="Restart">⟲</button>
-        </div>
+          <button id="start"   class="ctrl" title="Start">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </button>
+          <button id="pause"   class="ctrl" title="Pause">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
+          <button id="resume"  class="ctrl" title="Resume">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M7 5v14l5.5-3.5L18 19V5l-5.5 3.5z"/>
+            </svg>
+          </button>
+          <button id="stop"    class="ctrl" title="Stop">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <rect x="6" y="6" width="12" height="12" rx="2"/>
+            </svg>
+          </button>
+          <button id="restart" class="ctrl" title="Restart">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 5V1L8 5l4 4V6c3.3 0 6 2.7 6 6a6 6 0 0 1-6 6 6 6 0 0 1-5.92-5H4a8 8 0 0 0 8 8c4.42 0 8-3.58 8-8s-3.58-8-8-8z"/>
+            </svg>
+        </button>
+        </div>        
       </div>
       <!-- right score/hint -->
       <div class="overlay-right">
@@ -201,8 +255,8 @@
 
 <footer>
   <div class="container footer-inner">
-    <div>© <span id="year"></span> Ropesric Technologies Inc.</div>
-    <div>Design by <strong><a href="https://143premsai.github.io/" target="_blank">Prem Kandagattla</a></strong></div>
+      <div style="padding: 20px;">© <span id="year"></span> Ropesric Technologies Inc.</div>
+      <div style="padding: 20px;">Design by <strong><a href="https://143premsai.github.io/" target="_blank">Prem Kandagattla</a></strong></div>   
   </div>
 </footer>
 

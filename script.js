@@ -1,4 +1,42 @@
 document.getElementById('year').textContent=new Date().getFullYear();
+// Mobile menu toggle (slide-down under sticky header)
+(function(){
+  const btn   = document.getElementById('menuToggle');
+  const panel = document.getElementById('mobileMenu');
+  if(!btn || !panel) return;
+
+  const open = () => {
+    panel.hidden = false;      // include in layout
+    // force reflow so transition plays
+    // eslint-disable-next-line no-unused-expressions
+    panel.offsetHeight;
+    panel.classList.add('open');
+    btn.setAttribute('aria-expanded','true');
+  };
+  const close = () => {
+    panel.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    // hide after transition so it leaves tab order
+    panel.addEventListener('transitionend', function te(e){
+      if(e.propertyName==='max-height'){ panel.hidden = true; panel.removeEventListener('transitionend', te); }
+    });
+  };
+
+  btn.addEventListener('click', ()=>{
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    expanded ? close() : open();
+  });
+
+  // ESC to close
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true'){ close(); btn.focus(); }
+  });
+
+  // Close on link click
+  panel.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', ()=> close());
+  });
+})();
 
 /* console typing */
 const lines=[
@@ -18,6 +56,15 @@ function loopType(){
 typed.textContent=""; loopType();
 
 /* game */
+
+// Skip game setup entirely on small screens (matches CSS behavior)
+const IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 720px)').matches;
+if (!IS_MOBILE) {
+  // --- your existing game code below unchanged ---
+  const cvs = document.getElementById('gameCanvas'), ctx = cvs.getContext('2d');
+  // ... rest of your game setup & loop ...
+}
+
 const cvs=document.getElementById('gameCanvas'), ctx=cvs.getContext('2d');
 const W=cvs.width, H=cvs.height;
 let state='idle', robot, items, score, best=0, timeLeft, spawnTick, last, keys={}, total=0;
@@ -152,9 +199,17 @@ function draw(){
 }
 function frame(now){ if(state==='running'){ const dt=now-last; last=now; step(dt);} else { last=now; } draw(); requestAnimationFrame(frame); }
 function $(id){return document.getElementById(id)}
-$('start').onclick = ()=>{ if(state==='idle'||state==='over'){ reset(); state='running'; } };
-$('pause').onclick = ()=>{ if(state==='running'){ state='paused'; } };
-$('resume').onclick= ()=>{ if(state==='paused'){ state='running'; last=performance.now(); } };
-$('stop').onclick  = ()=>{ state='idle'; reset(); };
-$('restart').onclick=()=>{ reset(); state='running'; };
+
+function updateControls(state){
+  start.style.display = (state==='idle') ? 'inline-flex' : 'none';
+  resume.style.display = (state==='paused') ? 'inline-flex' : 'none';
+  pause.style.display  = (state==='running') ? 'inline-flex' : 'none';
+  // stop.style.display   = (state==='running' || state==='paused' || state == 'idle') ? 'inline-flex' : 'none';
+}
+updateControls(state)
+$('start').onclick = ()=>{ if(state==='idle'||state==='over'){ reset(); state='running'; updateControls(state);} };
+$('pause').onclick = ()=>{ if(state==='running'){ state='paused'; updateControls(state);} };
+$('resume').onclick= ()=>{ if(state==='paused'){ state='running'; last=performance.now();updateControls(state); } };
+$('stop').onclick  = ()=>{ state='idle'; reset(); updateControls(state); };
+$('restart').onclick=()=>{ reset(); state='running'; updateControls(state); };
 reset(); requestAnimationFrame(frame);

@@ -17,7 +17,12 @@
 }
 
 *{box-sizing:border-box}
+
 html,body{margin:0}
+
+/* Prevent any accidental horizontal scrolling */
+/* html, body { overflow-x: hidden; } */
+
 body{
   background:var(--bg);
   color:var(--ink);
@@ -27,14 +32,19 @@ body{
 a{color:#7AE0FF;text-decoration:none} a:hover{text-decoration:underline}
 .container{max-width:1180px;margin:0 auto;padding:0 20px}
 
-[id]{scroll-margin-top:calc(var(--nav)+16px)}
+/* [id]{scroll-margin-top:calc(var(--nav)+16px)} */
 [id]{scroll-margin-top:calc(var(--nav-h) + 10px)}
+[id]{ scroll-margin-top: calc(var(--nav) + 10px); }
 
-/* HEADER (unchanged desktop; corrected mobile alignment) */
-header.site{position:sticky;top:0;z-index:30;
-  background:rgba(10,17,32,.92);
-  backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--border)}
-.nav{height:var(--nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+  /* Header stays sticky (unchanged) */
+header.site{
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(10,17,32,.92);
+  backdrop-filter: saturate(160%) blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav{height:var(--nav);display:flex;align-items:center;justify-content:space-between;gap:16px;}
 .logo{display:flex;align-items:center;gap:12px}
 .brand-logo{width:125px;height:auto;display:block}
 .brand{font-weight:800;letter-spacing:.02em}
@@ -107,6 +117,9 @@ section.pad{padding:48px 0}
 @media (max-width:640px){ .stats{grid-template-columns:1fr} }
 
 /* GAME (unchanged look; only resume icon + spacebar + smaller canvas) */
+.ctrl svg{ width:18px; height:18px; pointer-events:none; }
+.ctrl:hover{ background:rgba(255,255,255,.18); }
+
 .canvas-wrap{position:relative}
 canvas{width:100%;height:auto;background:#071022;border:1px solid var(--border);border-radius:14px;display:block}
 .overlay-left{position:absolute;top:10px;left:10px;display:flex;flex-direction:column;gap:8px}
@@ -137,4 +150,88 @@ body::before{
     radial-gradient(900px 500px at 20% 8%, rgba(90,160,255,.12), transparent 60%),
     radial-gradient(700px 380px at 80% 12%, rgba(122,224,255,.10), transparent 60%),
     /* linear-gradient(180deg, #0a1428 0%, #0b1834 40%, #0a1120 100%); */
+}
+
+/* Default: show canvas, hide note */
+#game .game-mobile-note{ display:none; }
+
+/* Mobile: hide canvas UI, show note card */
+@media (max-width: 720px){
+  #game .game-heading{ display:none; }
+  #game .canvas-wrap{ display:none; }
+  #game .game-mobile-note{ display:block; }
+}
+
+/* Console: never overflow on small screens */
+@media (max-width: 720px){
+  .console{
+    width: auto;            /* not fixed width */
+    max-width: 100%;        /* respect viewport */
+    overflow-x: auto;       /* if a line gets long, scroll just the console */
+    white-space: pre-wrap;  /* already set, keep wrapping */
+    word-break: break-word; /* break long tokens if needed */
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Make sure the hero grid doesn't force side-scroll */
+  .hero-inner{ grid-template-columns: 1fr; overflow: hidden; }
+  .container{ overflow-x: clip; } /* avoids accidental subpixel overflow */
+}
+
+/* Hamburger (already added earlier) */
+.hamburger{
+  display:none;
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--ink);
+  border-radius:10px;
+  padding:.45rem .6rem;
+  font:600 16px/1 Inter,system-ui,sans-serif;
+  cursor:pointer;
+}
+
+/* ✨ NEW: mobile panel participates in layout (pushes content) */
+.mobile-menu{
+  display: none;          /* hidden on desktop */
+}
+
+
+
+/* MOBILE BEHAVIOR */
+@media (max-width:720px){
+  /* keep header compact */
+  .nav{
+    height:var(--nav);       /* fixed, not auto */
+    padding:0 0;             /* remove extra */
+    gap:10px;
+  }
+  .badge{ display:none; }    /* optional: hide badge to save height */
+  .navlinks{ display:none; } /* hide desktop links */
+  .hamburger{ display:inline-flex; align-items:center; gap:.5rem; }
+  
+
+/* Mobile menu panel (off by default) */
+.mobile-menu{
+  position:fixed;
+  top:var(--nav); left:0; right:0;
+  background:rgba(10,17,32,.96);
+  backdrop-filter:saturate(160%) blur(8px);
+  border-bottom:1px solid var(--border);
+  z-index:29;                 /* just under the header (z:30) */
+  display:flex; flex-direction:column;
+  gap:6px;
+  padding:10px 20px 16px;
+  max-height:0; overflow:hidden;
+  transition:max-height .28s ease;
+}
+.mobile-menu a{
+  padding:.6rem .4rem;
+  border-radius:8px;
+  color:var(--ink);
+}
+.mobile-menu a:hover{ background:rgba(255,255,255,.06); }
+
+/* When JS opens it */
+.mobile-menu.open{ max-height:70vh; }
+
+body.menu-open{ overflow:hidden; } /* prevent background scroll */
 }
