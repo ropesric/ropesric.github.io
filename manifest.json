@@ -1,0 +1,20 @@
+{
+  "name": "Ropesric Technologies Inc.",
+  "short_name": "Ropesric",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A1120",
+  "theme_color": "#0A1120",
+  "icons": [
+    {
+      "src": "assets/Ropesric_logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/Ropesric_logo_256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ]
+}
